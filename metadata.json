@@ -1,0 +1,7 @@
+{
+  "name": "Smart Expense Tracker",
+  "description": "An intelligent expense tracker that parses natural language summaries into structured data and provides actionable financial insights.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
