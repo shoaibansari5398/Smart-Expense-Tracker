@@ -153,13 +153,8 @@ const App: React.FC = () => {
     }
   }, [expenses, summary]);
 
-  // Initial insight fetch
-  useEffect(() => {
-    if (user && expenses.length > 0 && !insights && !loadingInsights && !isDataLoading) {
-      fetchInsights();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, isDataLoading]);
+  // Initial insight fetch removed for lazy loading
+
 
   if (isAuthChecking) {
     return <div className="min-h-screen flex items-center justify-center bg-slate-50 text-indigo-600">Initializing App...</div>;
@@ -179,6 +174,8 @@ const App: React.FC = () => {
             insights={insights}
             loadingInsights={loadingInsights}
             refreshInsights={fetchInsights}
+            expenses={expenses}
+            onDeleteExpense={handleDeleteExpense}
           />
         )}
         {activeTab === 'calendar' && (
