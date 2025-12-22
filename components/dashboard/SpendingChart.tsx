@@ -9,6 +9,7 @@ interface SpendingChartProps {
   selectedCategory: string | null;
   timeFrame: 'Daily' | 'Weekly' | 'Monthly' | 'All-Time';
   setTimeFrame: (tf: 'Daily' | 'Weekly' | 'Monthly' | 'All-Time') => void;
+  showAmounts: boolean;
 }
 
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6', '#6366f1', '#ef4444', '#14b8a6'];
@@ -18,7 +19,8 @@ export const SpendingChart: React.FC<SpendingChartProps> = ({
   onCategorySelect,
   selectedCategory,
   timeFrame,
-  setTimeFrame
+  setTimeFrame,
+  showAmounts
 }) => {
   const timeFrameExpenses = React.useMemo(() => {
     const now = new Date();
@@ -111,7 +113,7 @@ export const SpendingChart: React.FC<SpendingChartProps> = ({
                 ))}
               </Pie>
               {!isNoData && <Tooltip
-                formatter={(value: number) => [`₹${value.toFixed(2)}`, 'Amount']}
+                formatter={(value: number) => [showAmounts ? `₹${value.toFixed(2)}` : '****', 'Amount']}
                 contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', borderRadius: '12px', border: '1px solid #334155', color: '#f8fafc' }}
                 itemStyle={{ color: '#f8fafc' }}
               />}
@@ -137,7 +139,7 @@ export const SpendingChart: React.FC<SpendingChartProps> = ({
                 <span className="text-slate-300 truncate max-w-[120px]" title={item.name}>{item.name}</span>
               </div>
               <div className="text-slate-100 font-medium font-mono">
-                ₹{item.value.toFixed(2)} <span className="text-slate-500 text-xs ml-1">({item.percentage.toFixed(1)}%)</span>
+                {showAmounts ? `₹${item.value.toFixed(2)}` : '****'} <span className="text-slate-500 text-xs ml-1">({item.percentage.toFixed(1)}%)</span>
               </div>
             </div>
           )) : <div className="text-center text-slate-500 text-sm py-4">No data for this time period</div>}

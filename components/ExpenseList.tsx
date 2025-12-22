@@ -5,9 +5,10 @@ import { Expense } from '../types';
 interface ExpenseListProps {
   expenses: Expense[];
   onDelete: (id: string) => void;
+  showAmounts?: boolean;
 }
 
-const ExpenseList: React.FC<ExpenseListProps> = ({ expenses, onDelete }) => {
+const ExpenseList: React.FC<ExpenseListProps> = ({ expenses, onDelete, showAmounts = true }) => {
   if (expenses.length === 0) {
     return (
       <div className="text-center py-20 bg-slate-900/40 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-xl">
@@ -61,7 +62,7 @@ const ExpenseList: React.FC<ExpenseListProps> = ({ expenses, onDelete }) => {
                   </span>
                 </td>
                 <td className="px-6 py-4 text-right font-bold text-slate-100 font-mono">
-                  ₹{expense.amount.toFixed(2)}
+                  {showAmounts ? `₹${expense.amount.toFixed(2)}` : '****'}
                 </td>
                 <td className="px-6 py-4 text-center">
                   <button
@@ -124,7 +125,7 @@ const ExpenseList: React.FC<ExpenseListProps> = ({ expenses, onDelete }) => {
                   <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800 text-slate-400 border border-slate-700">
                     {expense.category}
                   </span>
-                  <span className="font-bold text-slate-100 text-sm font-mono">₹{expense.amount.toFixed(2)}</span>
+                  <span className="font-bold text-slate-100 text-sm font-mono">{showAmounts ? `₹${expense.amount.toFixed(2)}` : '****'}</span>
                 </div>
              </div>
              {/* Delete button (visible but behind drag on very small screens, or kept as fallback) */}

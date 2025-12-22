@@ -7,6 +7,7 @@ import { Skeleton } from '../ui/Skeleton';
 interface SummaryCardsProps {
   summary: ExpenseSummary;
   loading?: boolean;
+  showAmounts: boolean;
 }
 
 const item = {
@@ -14,7 +15,7 @@ const item = {
   show: { opacity: 1, y: 0 }
 };
 
-export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, loading }) => {
+export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, loading, showAmounts }) => {
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -41,7 +42,9 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, loading }) 
             <p className="text-sm font-medium text-slate-400">Daily Total</p>
           </CardHeader>
           <CardContent>
-            <h2 className="text-3xl font-bold text-slate-100">₹{summary.dailyTotal.toFixed(2)}</h2>
+            <h2 className="text-3xl font-bold text-slate-100">
+              {showAmounts ? `₹${summary.dailyTotal.toFixed(2)}` : '****'}
+            </h2>
             <p className="text-xs text-slate-500 mt-1">Expenses for today</p>
           </CardContent>
         </Card>
@@ -53,7 +56,9 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, loading }) 
             <p className="text-sm font-medium text-slate-400">Weekly Total</p>
           </CardHeader>
           <CardContent>
-            <h2 className="text-3xl font-bold text-slate-100">₹{summary.weeklyTotal.toFixed(2)}</h2>
+            <h2 className="text-3xl font-bold text-slate-100">
+              {showAmounts ? `₹${summary.weeklyTotal.toFixed(2)}` : '****'}
+            </h2>
             <p className="text-xs text-slate-500 mt-1">Expenses last 7 days</p>
           </CardContent>
         </Card>
@@ -65,7 +70,9 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, loading }) 
             <p className="text-sm font-medium text-slate-400">Monthly Total</p>
           </CardHeader>
           <CardContent>
-            <h2 className="text-3xl font-bold text-slate-100">₹{summary.monthlyTotal.toFixed(2)}</h2>
+            <h2 className="text-3xl font-bold text-slate-100">
+              {showAmounts ? `₹${summary.monthlyTotal.toFixed(2)}` : '****'}
+            </h2>
             <p className="text-xs text-slate-500 mt-1">Expenses last 30 days</p>
           </CardContent>
         </Card>

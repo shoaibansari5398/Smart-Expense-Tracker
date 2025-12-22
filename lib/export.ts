@@ -9,11 +9,21 @@ export const exportExpensesToCSV = (expenses: Expense[]) => {
   // Sort by date descending
   const sorted = [...expenses].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+  const sanitizeForCSV = (value: string) => {
+    if (!value) return '';
+    const str = String(value);
+    // Prevent CSV injection for values starting with =, +, -, or @
+    if (/^[=+\-@]/.test(str)) {
+      return `'${str}`;
+    }
+    return str;
+  };
+
   for (const row of sorted) {
     const values = [
-      `"${row.date}"`,
-      `"${row.item.replace(/"/g, '""')}"`, // Escape quotes
-      `"${row.category}"`,
+      `"${sanitizeForCSV(row.date)}"`,
+      `"${sanitizeForCSV(row.item).replace(/"/g, '""')}"`, // Escape quotes
+      `"${sanitizeForCSV(row.category)}"`,
       row.amount.toFixed(2),
     ];
     csvRows.push(values.join(','));
