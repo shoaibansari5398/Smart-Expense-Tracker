@@ -1,14 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { parseExpenseText } from '../services/geminiService';
 import { Expense } from '../types';
+
 import { Button } from './ui/Button';
+
+// Add type augmentation for SpeechRecognition
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
+import { useNavigate } from 'react-router-dom';
 
 interface ExpenseFormProps {
   onAddExpenses: (newExpenses: Omit<Expense, 'id' | 'createdAt'>[]) => void;
-  onCancel: () => void;
+  onCancel?: () => void;
 }
 
 const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpenses, onCancel }) => {
+  const navigate = useNavigate();
+  // ... existing implementation
+
   const [inputText, setInputText] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -23,7 +37,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpenses, onCancel }) =>
     // Initialize Speech Recognition if supported
     if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
       setIsSpeechSupported(true);
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = false;
@@ -172,7 +186,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpenses, onCancel }) =>
               <Button
                 type="button"
                 variant="outline"
-                onClick={onCancel}
+                onClick={() => onCancel ? onCancel() : navigate('/')}
                 disabled={isProcessing}
               >
                 Back to Dashboard

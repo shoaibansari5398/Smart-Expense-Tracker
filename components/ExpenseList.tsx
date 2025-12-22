@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Expense } from '../types';
 
 interface ExpenseListProps {
@@ -80,9 +81,38 @@ const ExpenseList: React.FC<ExpenseListProps> = ({ expenses, onDelete }) => {
       </div>
 
       {/* Mobile Card List */}
-      <div className="md:hidden divide-y divide-slate-800">
+      <div className="md:hidden">
         {sortedExpenses.map((expense) => (
-          <div key={expense.id} className="p-4 flex justify-between items-center group active:bg-slate-800/50">
+          <motion.div
+            key={expense.id}
+            initial={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, height: 0 }}
+            className="relative overflow-hidden"
+          >
+            {/* Background Delete Action */}
+            <div className="absolute inset-0 bg-red-500/20 flex items-center justify-end px-6">
+              <span className="text-red-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                Delete
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </span>
+            </div>
+
+            {/* Draggable Card */}
+            <motion.div
+              drag="x"
+              dragConstraints={{ left: -100, right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -80) {
+                   onDelete(expense.id);
+                }
+              }}
+              className="relative bg-[#020617] p-4 flex justify-between items-center group active:bg-slate-900 z-10 border-b border-slate-800/50"
+              style={{ x: 0 }}
+              whileTap={{ cursor: "grabbing" }}
+            >
              <div className="flex-1 min-w-0 pr-4">
                 <div className="flex justify-between items-start mb-1">
                   <h4 className="text-sm font-semibold text-slate-200 truncate pr-2 group-hover:text-emerald-400 transition-colors">{expense.item}</h4>
@@ -97,16 +127,18 @@ const ExpenseList: React.FC<ExpenseListProps> = ({ expenses, onDelete }) => {
                   <span className="font-bold text-slate-100 text-sm font-mono">₹{expense.amount.toFixed(2)}</span>
                 </div>
              </div>
+             {/* Delete button (visible but behind drag on very small screens, or kept as fallback) */}
              <button
-                onClick={() => onDelete(expense.id)}
-                className="text-slate-600 hover:text-red-400 p-2 -mr-2 transition-colors"
+                onClick={(e) => { e.stopPropagation(); onDelete(expense.id); }}
+                className="text-slate-600 hover:text-red-400 p-2 -mr-2 transition-colors md:hidden"
                 aria-label="Delete expense"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                   <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
+                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                 </svg>
               </button>
-          </div>
+            </motion.div>
+          </motion.div>
         ))}
       </div>
     </div>
