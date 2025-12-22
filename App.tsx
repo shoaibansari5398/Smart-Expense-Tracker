@@ -69,7 +69,9 @@ const App: React.FC = () => {
   const { summary } = useExpenseAnalysis(expenses);
 
   const handleLogin = (loggedInUser: User) => {
-    // State update handled by auth listener
+    if (loggedInUser.isGuest) {
+      setUser(loggedInUser);
+    }
   };
 
   const handleLogout = async () => {
